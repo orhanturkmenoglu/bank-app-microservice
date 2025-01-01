@@ -9,33 +9,87 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
 import org.example.cards.constants.CardsConstants;
+import org.example.cards.dto.CardsContactInfoDto;
 import org.example.cards.dto.CardsDto;
 import org.example.cards.dto.ErrorResponseDto;
 import org.example.cards.dto.ResponseDto;
 import org.example.cards.service.ICardsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author Eazy Bytes
- */
 
 @Tag(
-        name = "CRUD REST APIs for Cards in EazyBank",
-        description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE card details"
+        name = "CRUD REST APIs for Cards in Bank",
+        description = "CRUD REST APIs in Bank to CREATE, UPDATE, FETCH AND DELETE card details"
 )
 @RestController
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
-@AllArgsConstructor
 @Validated
 public class CardsController {
 
-    private ICardsService iCardsService;
+    private final ICardsService iCardsService;
+
+
+    public CardsController(ICardsService iCardsService) {
+        this.iCardsService = iCardsService;
+    }
+
+    @Value("${build.version}")
+    private String buildVersion ;
+
+    @Autowired
+    private CardsContactInfoDto cardsContactInfoDto;
+
+    @Autowired
+    private Environment environment;
+
+
+    @Operation(
+            summary = "Contact Info REST API",
+            description = "REST API to fetch contact information"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 OK"
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<CardsContactInfoDto> getContactInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(cardsContactInfoDto);
+    }
+
+    @Operation(
+            summary = "Java Version REST API",
+            description = "REST API to fetch java version"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 OK"
+    )
+    @GetMapping("/java-info")
+    public ResponseEntity<String> getJavaVersionInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+    }
+
+    @Operation(
+            summary = "Build Info REST API",
+            description = "REST API to fetch build information"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 OK"
+    )
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
+
 
     @Operation(
             summary = "Create Card REST API",

@@ -35,7 +35,6 @@ public class AccountsController {
     public AccountsController(IAccountsService iAccountsService) {
         this.iAccountsService = iAccountsService;
     }
-
     @Value("${build.version}")
     private String buildVersion;
 
@@ -84,7 +83,6 @@ public class AccountsController {
     public ResponseEntity<String> getBuildInfo(){
         return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
     }
-
 
 
     @Operation(

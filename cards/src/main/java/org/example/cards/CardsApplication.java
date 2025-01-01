@@ -5,8 +5,10 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
+import org.example.cards.dto.CardsContactInfoDto;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
@@ -28,6 +30,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 				description = "Bank Cards microservice REST API Documentation"
 		)
 )
+@EnableConfigurationProperties(CardsContactInfoDto.class)
 public class CardsApplication {
 
 	public static void main(String[] args) {

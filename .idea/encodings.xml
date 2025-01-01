@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/accounts/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/accounts/src/main/resources/application.yml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/accounts/src/main/resources/application_prod.yml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/accounts/src/main/resources/application_qa.yml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cards/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cards/src/main/resources/application.yml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cards/src/main/resources/application_prod.yml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cards/src/main/resources/application_qa.yml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config-server/src/main/java/com/example/config_server/ConfigServerApplication.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config-server/src/main/resources/application.yml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config-server/src/main/resources/config/accounts-prod.yml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config-server/src/main/resources/config/accounts-qa.yml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/config-server/src/main/resources/config/accounts.yml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/loans" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/loans/src/main/java" charset="UTF-8" />
-    <file url="PROJECT" charset="windows-1254" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

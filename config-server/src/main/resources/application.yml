@@ -1,0 +1,14 @@
+﻿server:
+  port: 8071
+
+spring:
+  application:
+    name: "configserver"
+    # Şimdi de yapılandırma dosyalarımızı config server sunucumuza nerede olduğunu bildirerek okuma yapacağız
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: "classpath:/config"  # Yapılandırma dosyalarımızın konumu

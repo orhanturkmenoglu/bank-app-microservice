@@ -1,0 +1,18 @@
+
+spring:
+  config:
+    activate:
+      on-profile: "qa"
+
+build:
+  version: "2.0"
+
+# prefix ile başlayan tüm endpointlerin bu prefix ile başlamasını sağlar
+cards:
+  message: "Welcome to Cards API - QA"
+  contactDetails:
+    name: "John Doe - Developer - QA"
+    email: "orhantrkmn749@gmail.com"
+  onCallSupport:
+    - "(222) 555-5555"
+    - "(222) 555-5556"

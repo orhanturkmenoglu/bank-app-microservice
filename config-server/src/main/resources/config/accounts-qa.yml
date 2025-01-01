@@ -1,0 +1,12 @@
+build:
+  version: "2.0"
+
+# prefix ile başlayan tüm endpointlerin bu prefix ile başlamasını sağlar
+accounts:
+  message: "Welcome to Accounts API - QA"
+  contactDetails:
+    name: "John Doe - QA Developer"
+    email: "orhantrkmn749@gmail.com"
+  onCallSupport:
+    - "(666) 555-5555"
+    - "(666) 555-5556"

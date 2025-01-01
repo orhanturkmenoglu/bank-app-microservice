@@ -1,0 +1,12 @@
+build:
+  version: "1.0"
+
+# prefix ile başlayan tüm endpointlerin bu prefix ile başlamasını sağlar
+accounts:
+  message: "Welcome to Accounts API - PROD"
+  contactDetails:
+    name: "John Doe - Product Owner"
+    email: "orhantrkmn749@gmail.com"
+  onCallSupport:
+    - "(777) 555-5555"
+    - "(777) 555-5556"
