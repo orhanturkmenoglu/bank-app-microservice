@@ -1,0 +1,12 @@
+build:
+  version: "2.0"
+
+# prefix ile başlayan tüm endpointlerin bu prefix ile başlamasını sağlar
+cards:
+  message: "Welcome to Loans  API - PROD"
+  contactDetails:
+    name: "John Doe - Prod Owner"
+    email: "orhantrkmn749@gmail.com"
+  onCallSupport:
+    - "(333) 555-5555"
+    - "(333) 555-5556"

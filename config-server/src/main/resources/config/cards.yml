@@ -1,0 +1,12 @@
+build:
+  version: "3.0"
+
+# prefix ile başlayan tüm endpointlerin bu prefix ile başlamasını sağlar
+cards:
+  message: "Welcome to Cards API"
+  contactDetails:
+    name: "John Doe - Developer"
+    email: "orhantrkmn749@gmail.com"
+  onCallSupport:
+    - "(111) 555-5555"
+    - "(111) 555-5556"
