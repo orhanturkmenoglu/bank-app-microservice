@@ -11,4 +11,5 @@ spring:
     config:
       server:
         native:
-          search-locations: "classpath:/config"  # Yapılandırma dosyalarımızın konumu
+          search-locations: "file:///D:/config"  # Yapılandırma dosyalarımızın konumu yerel pc dosyasından okunacak
+        # search-locations: "classpath:/config"  # Yapılandırma dosyalarımızın konumu

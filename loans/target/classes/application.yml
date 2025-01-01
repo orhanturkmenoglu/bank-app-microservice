@@ -21,8 +21,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  # config-server içerisindeki dosyayı okuyacak
+  # import: "optional:configserver:http://localhost:8071/"
   config:
-    import: "optional:configserver:http://localhost:8071/"
+    import: "file:///D://config"
 
 
 
