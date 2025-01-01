@@ -6,10 +6,47 @@ spring:
     name: "configserver"
     # Şimdi de yapılandırma dosyalarımızı config server sunucumuza nerede olduğunu bildirerek okuma yapacağız
   profiles:
-    active: native
+    active: git # github üzerinden yapılandırma dosyalarımızı okuması için aktif hale gelmeli
+  # active: native  #sadece yerel dosya veya class path dosyalarını okuması için aktif hale gelmeli
   cloud:
     config:
       server:
-        native:
-          search-locations: "file:///D:/config"  # Yapılandırma dosyalarımızın konumu yerel pc dosyasından okunacak
+        git:
+          uri: "https://github.com/orhanturkmenoglu/bank-app-config.git"
+          # sadece  yerel dosya veya class path dosyalarında aktif hale gelecek.
+          default-label: main  # main branch'ı default olarak okumamızı sağlar
+          timeout: 5 # 5 saniye kadar bekleyecek yanıt gelmezse hata vermesini saglar
+          clone-on-start: true  # uygulama baslatildiginda github'den dosyaları yerel sisteme kopyalar.
+          force-pull: true  # github üzerindeki yapılandırma dosyalarında meydana gelen değişimlerde tekrardan dosyayı çeker kopyalar.
+
+        #      server:
+        #        native:
+        #          search-locations: "file:///D:/config"  # Yapılandırma dosyalarımızın konumu yerel pc dosyasından okunacak
         # search-locations: "classpath:/config"  # Yapılandırma dosyalarımızın konumu
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
+encrypt:
+  key: "RN2rKjmJC8cnncoC1iMdDNbQY6Bi69/jJW3Bf19e8ZXj0HdA4yyHrBZwps693gL4"
+
+
+# microservislerin çalışma esnasında config-server üzerinden yapılandırma dosyalarını okuyacağız ama bunun bir dezavantajı var
+#  bu da uygulamayı yeniden başlatmak zorunda kalırız. eger configurasyon dosyasında değişiklie gidersek
+# bunu önlemek için actuator api kullanacaz ve bunu kullanarak config dosyasını yeniden okuyacaz uygulama yeniden başlatılmaya
+# gerek duymadan.actutor yenileme adıyla bir api ortaya çıkaracak.
+# actuator/refresh : sayesinde değişen konfigurasyon dosyamızdaki özelliklerin uygulama yeniden başlatılmadan okuyabilir.
+# postman uygulamasından bu apiyi kullanabiliriz. post istegi gönder.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # tüm endpointleri açık hale getirir
+
+# actuator/refresh : sayesinde değişen konfigurasyon dosyamızdaki özelliklerin uygulama yeniden başlatılmadan okuyabilir.
+# postman uygulamasından bu apiyi kullanabiliriz. post istegi gönder.
+# ama dezavantajı bunun bütün microservislerde tek tek manuel olarak çağırmamız laızm
+# bunu da cloud bus ile otomatik hale getirebilirz tek bir mesaj ile bütün microservislerden değişiklikleri okuyabiliriz
+# cloud-bus : ile actuator/busrefresh post endpointini kullanarak bütün microservislerde değişiklikleri okuyabiliriz.tek bir çağırma ile okuyabiliriz.
+# VE YİNE BUNUDA cloud-monitor sayesinde değişiklikleri otomatik olarak okuyabiliriz. bunun örneğini vermedim.
