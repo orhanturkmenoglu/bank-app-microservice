@@ -6,13 +6,16 @@ spring:
   profiles:
     active: "prod"
   datasource:
-    url: jdbc:mysql://localhost:3307/accountsdb
+    url: jdbc:mysql://localhost:3306/bank-app-microservices
     username: root
-    password: root
+    password: 12345
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
   sql:
     init:
       mode: always

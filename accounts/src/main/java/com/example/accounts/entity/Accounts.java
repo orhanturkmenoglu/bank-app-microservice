@@ -3,8 +3,6 @@ package com.example.accounts.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 public class Accounts extends BaseEntity {
@@ -27,6 +25,17 @@ public class Accounts extends BaseEntity {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+    public Accounts() {
+    }
+
+    public Accounts(Long customerId, Long accountNumber, String accountType, String branchAddress, String email, String mobileNumber) {
+        this.customerId = customerId;
+        this.accountNumber = accountNumber;
+        this.accountType = accountType;
+        this.branchAddress = branchAddress;
+        this.email = email;
+        this.mobileNumber = mobileNumber;
+    }
 
     public Long getCustomerId() {
         return customerId;

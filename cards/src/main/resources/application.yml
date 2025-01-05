@@ -4,16 +4,16 @@ spring:
   application:
     name: cards
   datasource:
-    url: jdbc:mysql://localhost:3308/cardsdb
+    url: jdbc:mysql://localhost:3306/bank-app-microservices
     username: root
-    password: root
+    password: 12345
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-  sql:
-    init:
-      mode: always
+    properties:
+      hibernate:
+        format_sql: true
 
   config:
     import: "optional:configserver:http://localhost:8071/"
