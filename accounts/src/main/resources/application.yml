@@ -6,23 +6,16 @@ spring:
   profiles:
     active: "prod"
   datasource:
-    url: jdbc:h2:mem:test
-    driverClassName: org.h2.Driver
-    username: sa
-    password: ''
-  h2:
-    console:
-      enabled: true
+    url: jdbc:mysql://localhost:3307/accountsdb
+    username: root
+    password: root
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
     show-sql: true
-  rabbitmq:
-    host: "localhost"
-    port: 5672
-    username: "guest"
-    password: "guest"
+  sql:
+    init:
+      mode: always
 
   config:
     import: "optional:configserver:http://localhost:8071/"
@@ -32,3 +25,26 @@ management:
     web:
       exposure:
         include: "*"  # tüm endpointleri açık hale getirir
+  # info endpointlerini ekrana yazdırır bu eureka server içeirisnde kayıt olan accounts hakkında bilgi almamzı sağlar
+  endpoint:
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: "http://localhost:8761/eureka/"  #default bağalntı adresi eureka servera bağlanacak.
+
+
+# eureka server içerisinde microservise ait kayıt bilgilerini isteğe bağlıdır bu.
+info:
+  app:
+    name: "Accounts Microservice"
+    description: "Accounts Microservice for  Bank application"
+    version: "1.0.0"

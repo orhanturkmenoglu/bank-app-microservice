@@ -4,31 +4,45 @@ spring:
   application:
     name: cards
   datasource:
-    url: jdbc:h2:mem:test
-    driverClassName: org.h2.Driver
-    username: sa
-    password: 12345
-  h2:
-    console:
-      enabled: true
+    url: jdbc:mysql://localhost:3308/cardsdb
+    username: root
+    password: root
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
     show-sql: true
+  sql:
+    init:
+      mode: always
+
   config:
     import: "optional:configserver:http://localhost:8071/"
   profiles:
     active: "qa"
 
-  rabbitmq:
-    host: "localhost"
-    port: 5672
-    username: "guest"
-    password: "guest"
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"  # tüm endpointleri açık hale getirir
+  endpoint:
+    shutdown:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: "http://localhost:8761/eureka/"
+info:
+  app:
+    name: "Cards Microservice"
+    description: "Project for Spring Boot Microservices Course"
+    version: "1.0.0"

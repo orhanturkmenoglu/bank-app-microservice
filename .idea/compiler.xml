@@ -10,6 +10,7 @@
         <module name="config-server" />
         <module name="cards" />
         <module name="accounts" />
+        <module name="eureka-server" />
         <module name="loans" />
       </profile>
     </annotationProcessing>
@@ -19,6 +20,7 @@
       <module name="accounts" options="-parameters" />
       <module name="cards" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
       <module name="loans" options="-parameters" />
     </option>
   </component>

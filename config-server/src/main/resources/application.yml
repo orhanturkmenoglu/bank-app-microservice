@@ -23,11 +23,7 @@ spring:
         #        native:
         #          search-locations: "file:///D:/config"  # Yapılandırma dosyalarımızın konumu yerel pc dosyasından okunacak
         # search-locations: "classpath:/config"  # Yapılandırma dosyalarımızın konumu
-  rabbitmq:
-    host: "localhost"
-    port: 5672
-    username: "guest"
-    password: "guest"
+
 encrypt:
   key: "RN2rKjmJC8cnncoC1iMdDNbQY6Bi69/jJW3Bf19e8ZXj0HdA4yyHrBZwps693gL4"
 
@@ -50,3 +46,7 @@ management:
 # bunu da cloud bus ile otomatik hale getirebilirz tek bir mesaj ile bütün microservislerden değişiklikleri okuyabiliriz
 # cloud-bus : ile actuator/busrefresh post endpointini kullanarak bütün microservislerde değişiklikleri okuyabiliriz.tek bir çağırma ile okuyabiliriz.
 # VE YİNE BUNUDA cloud-monitor sayesinde değişiklikleri otomatik olarak okuyabiliriz. bunun örneğini vermedim.
+
+
+# docker image yardımıyla mysql containerimizi oluşturduk
+# docker run -p 3307:3306 --name accountsdb -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=accountsdb -d mysql;
