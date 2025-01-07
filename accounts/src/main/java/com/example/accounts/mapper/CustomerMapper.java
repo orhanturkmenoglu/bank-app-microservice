@@ -6,24 +6,40 @@ import com.example.accounts.entity.Customer;
 
 public class CustomerMapper {
 
-    public static CustomerDto mapToCustomerDto(Customer customer, CustomerDto customerDto) {
-        customerDto.setName(customer.getName());
-        customerDto.setEmail(customer.getEmail());
-        customerDto.setMobileNumber(customer.getMobileNumber());
+    // Common fields mapping for both CustomerDto and CustomerDetailsDto
+    private static <T> void mapCommonFields(Customer customer, T dto) {
+        if (dto instanceof CustomerDto) {
+            ((CustomerDto) dto).setName(customer.getName());
+            ((CustomerDto) dto).setEmail(customer.getEmail());
+            ((CustomerDto) dto).setMobileNumber(customer.getMobileNumber());
+        } else if (dto instanceof CustomerDetailsDto) {
+            ((CustomerDetailsDto) dto).setName(customer.getName());
+            ((CustomerDetailsDto) dto).setEmail(customer.getEmail());
+            ((CustomerDetailsDto) dto).setMobileNumber(customer.getMobileNumber());
+        }
+    }
+
+    public static CustomerDto mapToCustomerDto(Customer customer) {
+        CustomerDto customerDto = new CustomerDto();
+        mapCommonFields(customer, customerDto);
         return customerDto;
     }
 
-    public static CustomerDetailsDto mapToCustomerDetailsDto(Customer customer, CustomerDetailsDto customerDetailsDto) {
-        customerDetailsDto.setName(customer.getName());
-        customerDetailsDto.setEmail(customer.getEmail());
-        customerDetailsDto.setMobileNumber(customer.getMobileNumber());
+    public static CustomerDetailsDto mapToCustomerDetailsDto(Customer customer) {
+        CustomerDetailsDto customerDetailsDto = new CustomerDetailsDto();
+        mapCommonFields(customer, customerDetailsDto);
         return customerDetailsDto;
     }
 
-    public static Customer mapToCustomer(CustomerDto customerDto, Customer customer) {
+    public static Customer mapToCustomer(CustomerDto customerDto) {
+        Customer customer = new Customer();
         customer.setName(customerDto.getName());
         customer.setEmail(customerDto.getEmail());
         customer.setMobileNumber(customerDto.getMobileNumber());
         return customer;
     }
+
+
+
+
 }

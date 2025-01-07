@@ -1,6 +1,5 @@
 package com.example.accounts.service.impl;
 
-import com.example.accounts.dto.AccountsDto;
 import com.example.accounts.dto.CardsDto;
 import com.example.accounts.dto.CustomerDetailsDto;
 import com.example.accounts.dto.LoansDto;
@@ -43,8 +42,8 @@ public class CustomerServiceImpl implements ICustomerService {
                         new ResourceNotFoundException("Account", "Customer Id",
                                 customer.getCustomerId().toString()));
 
-        CustomerDetailsDto customerDetailsDto = CustomerMapper.mapToCustomerDetailsDto(customer, new CustomerDetailsDto());
-        customerDetailsDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts, new AccountsDto()));
+        CustomerDetailsDto customerDetailsDto = CustomerMapper.mapToCustomerDetailsDto(customer);
+        customerDetailsDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts));
 
 
         //cards service ile open feign client ile istek atıyoruz iletişime geçiyoruz

@@ -6,11 +6,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Schema(
         name = "CustomerDetails",
         description = "Schema to hold Customer,Account,Cards and Loans information"
 )
+@Data
 public class CustomerDetailsDto {
 
     @Schema(
@@ -53,73 +55,4 @@ public class CustomerDetailsDto {
     )
     private LoansDto loansDto;
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
-
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-
-    public AccountsDto getAccountsDto() {
-        return accountsDto;
-    }
-
-    public void setAccountsDto(AccountsDto accountsDto) {
-        this.accountsDto = accountsDto;
-    }
-
-
-    /**
-     * get field
-     *
-     * @return loansDto
-     */
-    public LoansDto getLoansDto() {
-        return this.loansDto;
-    }
-
-    /**
-     * set field
-     *
-     * @param loansDto
-     */
-    public void setLoansDto(LoansDto loansDto) {
-        this.loansDto = loansDto;
-    }
-
-    /**
-     * get field
-     *
-     * @return cardsDto
-     */
-    public CardsDto getCardsDto() {
-        return this.cardsDto;
-    }
-
-    /**
-     * set field
-     *
-     * @param cardsDto
-     */
-    public void setCardsDto(CardsDto cardsDto) {
-        this.cardsDto = cardsDto;
-    }
 }

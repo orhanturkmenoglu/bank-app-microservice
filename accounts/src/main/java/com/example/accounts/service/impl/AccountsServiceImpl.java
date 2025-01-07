@@ -14,7 +14,6 @@ import com.example.accounts.repository.CustomerRepository;
 import com.example.accounts.service.IAccountsService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -32,8 +31,7 @@ public class AccountsServiceImpl implements IAccountsService {
     @Override
     public void createAccount(CustomerDto customerDto) {
 
-
-        Customer customer = CustomerMapper.mapToCustomer(customerDto,new Customer());
+        Customer customer = CustomerMapper.mapToCustomer(customerDto);
         Optional<Customer> optionalCustomer = customerRepository.findByMobileNumber(customerDto.getMobileNumber());
 
         if(optionalCustomer.isPresent()){
@@ -71,8 +69,8 @@ public class AccountsServiceImpl implements IAccountsService {
                         new ResourceNotFoundException("Account", "Customer Id",
                                 customer.getCustomerId().toString()));
 
-        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
-        customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts, new AccountsDto()));
+        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer);
+        customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts));
         return customerDto;
     }
 
@@ -85,7 +83,7 @@ public class AccountsServiceImpl implements IAccountsService {
                     .orElseThrow(() ->
                             new ResourceNotFoundException("Account", "Account Number", accountsDto.getAccountNumber().toString()));
 
-            AccountsMapper.mapToAccounts(accountsDto,accounts);
+            AccountsMapper.mapToAccounts(accountsDto);
             accounts = accountsRepository.save(accounts);
 
             Long customerId = accounts.getCustomerId();
@@ -93,7 +91,7 @@ public class AccountsServiceImpl implements IAccountsService {
                     .orElseThrow(() ->
                             new ResourceNotFoundException("Customer", "Customer Id", customerId.toString()));
 
-            CustomerMapper.mapToCustomer(customerDto, customer);
+            CustomerMapper.mapToCustomer(customerDto);
             customerRepository.save(customer);
             isUpdated=true;
         }
