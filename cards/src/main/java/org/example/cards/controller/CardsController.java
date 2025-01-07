@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import org.example.cards.constants.CardsConstants;
-import org.example.cards.dto.CardsContactInfoDto;
-import org.example.cards.dto.CardsDto;
-import org.example.cards.dto.ErrorResponseDto;
-import org.example.cards.dto.ResponseDto;
+import org.example.cards.dto.*;
 import org.example.cards.service.ICardsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -142,6 +139,14 @@ public class CardsController {
                                                                String mobileNumber) {
         CardsDto cardsDto = iCardsService.fetchCard(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(cardsDto);
+    }
+
+    @GetMapping("/fetchCardsDetails")
+    public ResponseEntity<CardsDetailsDto> fetchCardCustomerDetails(@RequestParam
+                                                     @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+                                                     String mobileNumber) {
+
+       return ResponseEntity.status(HttpStatus.OK).body(iCardsService.fetchCardCustomerDetails(mobileNumber));
     }
 
     @Operation(

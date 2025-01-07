@@ -1,24 +1,29 @@
 package org.example.cards.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.cards.constants.CardsConstants;
+import org.example.cards.dto.CardsDetailsDto;
 import org.example.cards.dto.CardsDto;
+import org.example.cards.dto.CustomerDetailsDto;
 import org.example.cards.entity.Cards;
 import org.example.cards.exception.CardAlreadyExistsException;
 import org.example.cards.exception.ResourceNotFoundException;
 import org.example.cards.mapper.CardsMapper;
 import org.example.cards.repository.CardsRepository;
 import org.example.cards.service.ICardsService;
+import org.example.cards.service.client.CustomerFeignClient;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Random;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CardsServiceImpl implements ICardsService {
 
-    private CardsRepository cardsRepository;
+    private final CardsRepository cardsRepository;
+
+    private final CustomerFeignClient  customerFeignClient;
 
     /**
      * @param mobileNumber - Mobile Number of the Customer
@@ -63,6 +68,25 @@ public class CardsServiceImpl implements ICardsService {
 
     /**
      *
+     * @param mobileNumber - Input mobile Number
+     * @return Card Details based on a given mobileNumber
+     */
+
+    @Override
+    public CardsDetailsDto fetchCardCustomerDetails(String mobileNumber) {
+        Cards cards = cardsRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Card", "mobileNumber", mobileNumber)
+        );
+
+
+        CustomerDetailsDto customerDetailsDto = customerFeignClient.fetchCustomerDetails(mobileNumber).getBody();
+
+        return CardsMapper.mapToCardsDetailsDto(cards, new CardsDetailsDto(), customerDetailsDto);
+    }
+
+
+    /**
+     *
      * @param cardsDto - CardsDto Object
      * @return boolean indicating if the update of card details is successful or not
      */
@@ -87,6 +111,8 @@ public class CardsServiceImpl implements ICardsService {
         cardsRepository.deleteById(cards.getCardId());
         return true;
     }
+
+
 
 
 }

@@ -6,16 +6,16 @@ spring:
   profiles:
     active: "default"
   datasource:
-    url: jdbc:mysql://localhost:3309/loansdb
+    url: jdbc:mysql://localhost:3306/bank-app-microservices
     username: root
-    password: root
+    password: 12345
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-  sql:
-    init:
-      mode: always
+    properties:
+      hibernate:
+        format_sql: true
 
 
     # config-server içerisindeki dosyayı okuyacak

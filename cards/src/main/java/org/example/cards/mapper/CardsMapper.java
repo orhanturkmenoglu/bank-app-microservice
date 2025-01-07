@@ -1,7 +1,9 @@
 package org.example.cards.mapper;
 
 
+import org.example.cards.dto.CardsDetailsDto;
 import org.example.cards.dto.CardsDto;
+import org.example.cards.dto.CustomerDetailsDto;
 import org.example.cards.entity.Cards;
 
 public class CardsMapper {
@@ -26,4 +28,14 @@ public class CardsMapper {
         return cards;
     }
 
+    public static CardsDetailsDto mapToCardsDetailsDto(Cards cards, CardsDetailsDto cardsDetailsDto, CustomerDetailsDto customerDetailsDto) {
+        cardsDetailsDto.setMobileNumber(cards.getMobileNumber());
+        cardsDetailsDto.setCardNumber(cards.getCardNumber());
+        cardsDetailsDto.setCardType(cards.getCardType());
+        cardsDetailsDto.setTotalLimit(cards.getTotalLimit());
+        cardsDetailsDto.setAmountUsed(cards.getAmountUsed());
+        cardsDetailsDto.setAvailableAmount(cards.getAvailableAmount());
+        cardsDetailsDto.setCustomerDetailsDto(customerDetailsDto);
+        return cardsDetailsDto;
+    }
 }
