@@ -1,0 +1,42 @@
+server:
+  port: 8072
+spring:
+  application:
+    name: "gateway-server"
+  # config-server içerisindeki dosyayı okuyacak
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+
+  # Eğer Eureka kullanıyorsanız, Discovery Locator özelliği ile dinamik rota yönetimi yapabilirsiniz.
+  # burada dinamik rota yönetimi aktif edildi ve eureka server'a baglanildi ve eureka server'dan rota bilgileri alindi
+  # bu sayede dinamik olarak rota yönetimi yapildi
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true  # bu ayar servis id'lerini  kucuk harfe cevirir
+          #http://localhost:8072/ACCOUNTS/api/create   : ACCOUNTS OLAN KISMI accounts olarak kullanmamızı sağlar url büyük harf olmamalıdır.
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+info:
+  app:
+    name: "gateway-server"
+    description: "gateway-server microservice application"
+    version: "1.0.0"

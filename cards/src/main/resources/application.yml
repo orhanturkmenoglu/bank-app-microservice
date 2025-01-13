@@ -2,7 +2,7 @@ server:
   port: 8081
 spring:
   application:
-    name: cards
+    name: "CARDS"
   datasource:
     url: jdbc:mysql://localhost:3306/bank-app-microservices
     username: root
