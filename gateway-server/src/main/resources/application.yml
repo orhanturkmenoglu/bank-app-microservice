@@ -14,10 +14,9 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
+          enabled: false # dinamik rota yonetimi pasif edildi sadece özel yönlendirmem geçerli olacak.http://localhost:8072/accounts/api/fetch?mobileNumber=4344376871 iptal olacak
           lower-case-service-id: true  # bu ayar servis id'lerini  kucuk harfe cevirir
           #http://localhost:8072/ACCOUNTS/api/create   : ACCOUNTS OLAN KISMI accounts olarak kullanmamızı sağlar url büyük harf olmamalıdır.
-
 
 management:
   endpoints:
@@ -26,7 +25,7 @@ management:
         include: "*"
   endpoint:
     gateway:
-      enabled: true
+      access: unrestricted
   info:
     env:
       enabled: true
@@ -40,3 +39,4 @@ info:
     name: "gateway-server"
     description: "gateway-server microservice application"
     version: "1.0.0"
+
