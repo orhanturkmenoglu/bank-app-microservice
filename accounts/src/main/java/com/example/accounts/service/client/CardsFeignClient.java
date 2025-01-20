@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 // open feign client : rest template'dir http yöntemleri ile microservisler arasında iletişm sağlar.
-@FeignClient("cards")
-public interface CardsFeingClient {
+@FeignClient(name = "cards",fallback = CardsFallback.class)
+public interface CardsFeignClient {
 
     @GetMapping(value = "/api/fetch",consumes = "application/json")
     ResponseEntity<CardsDto> fetchCardDetails(@RequestParam String mobileNumber);
