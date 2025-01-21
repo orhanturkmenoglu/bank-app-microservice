@@ -69,3 +69,19 @@ resilience4j:
         failureRateThreshold: 50
         waitDurationInOpenState: 10000
         automaticTransitionFromOpenToHalfOpenEnabled: true
+
+  #retry ayarları
+  retry:
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 500
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        ignoreExceptions:
+          - java.lang.NullPointerException
+        retry-exceptions:
+          - java.util.concurrent.TimeoutException
+logging:
+  level:
+    web: debug

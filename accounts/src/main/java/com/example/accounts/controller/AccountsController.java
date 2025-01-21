@@ -6,6 +6,7 @@ import com.example.accounts.dto.CustomerDto;
 import com.example.accounts.dto.ErrorResponseDto;
 import com.example.accounts.dto.ResponseDto;
 import com.example.accounts.service.IAccountsService;
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -28,6 +30,8 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @Tag(name = "CRUD REST APIs Accounts in Bank"
         ,description = "CRUD REST APIs Accounts in Bank to CREATE,UPDATE,FETCH AND DELETE account details")
+
+@Slf4j
 public class AccountsController {
 
     private final IAccountsService iAccountsService;
@@ -79,11 +83,20 @@ public class AccountsController {
             responseCode = "200",
             description = "HTTP Status 200 OK"
     )
+
+    @Retry(name = "getBuildInfo",fallbackMethod = "getBuildInfoFallback")
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo(){
-        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+        log.debug("getBuildInfo() method invoked");
+        throw new NullPointerException();
+        /*return ResponseEntity.status(HttpStatus.OK).body(buildVersion);*/
     }
 
+    public ResponseEntity<String> getBuildInfoFallback(Throwable throwable){
+        log.debug("getBuildInfoFallback() method invoked");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("0.9");
+    }
 
     @Operation(
             summary = "Create Account REST API",

@@ -18,6 +18,11 @@ spring:
           lower-case-service-id: true  # bu ayar servis id'lerini  kucuk harfe cevirir
           #http://localhost:8072/ACCOUNTS/api/create   : ACCOUNTS OLAN KISMI accounts olarak kullanmamızı sağlar url büyük harf olmamalıdır.
 
+      # http timeout ayarları
+      httpclient:
+        connect-timeout: 1000
+        response-timeout: 2s
+
 management:
   endpoints:
     web:

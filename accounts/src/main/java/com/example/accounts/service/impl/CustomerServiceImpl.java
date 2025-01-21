@@ -57,7 +57,6 @@ public class CustomerServiceImpl implements ICustomerService {
             customerDetailsDto.setLoansDto(loansDtoResponseEntity.getBody());
         }
 
-
         ResponseEntity<CardsDto> cardsDtoResponseEntity =
                 cardsFeignClient.fetchCardDetails(mobileNumber);
 
