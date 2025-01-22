@@ -7,11 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
+import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
+import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -25,25 +27,27 @@ public class GatewayServerApplication {
 
 
     @Bean
-    public RouteLocator  customRouteLocator(RouteLocatorBuilder builder) {
+    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("accounts", r -> r.path("/bankapp/accounts/**")
-                        .filters(f -> f.rewritePath("/bankapp/accounts/(?<segment>.*)","/${segment}")
-                                .circuitBreaker(c->c.setName("accountsCircuitBreaker")
+                        .filters(f -> f.rewritePath("/bankapp/accounts/(?<segment>.*)", "/${segment}")
+                                .circuitBreaker(c -> c.setName("accountsCircuitBreaker")
                                         .setFallbackUri("forward:/contactSupport")))
                         .uri("lb://ACCOUNTS"))
                 .route("loans", r -> r.path("/bankapp/loans/**")
-                        .filters(f -> f.rewritePath("/bankapp/loans/(?<segment>.*)","/${segment}")
+                        .filters(f -> f.rewritePath("/bankapp/loans/(?<segment>.*)", "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
                                 .retry(retryConfig -> retryConfig.setRetries(3)
-                                                .setMethods(HttpMethod.GET)
-                                                .setBackoff(Duration.ofMillis(100),Duration.ofMillis(1000),2,true)))
+                                        .setMethods(HttpMethod.GET)
+                                        .setBackoff(Duration.ofMillis(100), Duration.ofMillis(1000), 2, true)))
                         .uri("lb://LOANS"))
 
                 .route("cards", r -> r.path("/bankapp/cards/**")
-                        .filters(f -> f.rewritePath("/bankapp/cards/(?<segment>.*)","/${segment}"))
-                        .uri("lb://CARDS"))
-                .build();
+                        .filters(f -> f.rewritePath("/bankapp/cards/(?<segment>.*)", "/${segment}")
+                                .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter())
+                                        .setKeyResolver(useKeyResolver())))
+                                        .uri("lb://CARDS"))
+                                .build();
     }
 
 
@@ -57,6 +61,21 @@ public class GatewayServerApplication {
                 .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
                 .timeLimiterConfig(TimeLimiterConfig.custom()
                         .timeoutDuration(Duration.ofSeconds(4)).build()).build());
+    }
+
+
+    // rate limiter : hız sınırlayıcı istek sınırlayıcı
+    @Bean
+    public RedisRateLimiter redisRateLimiter() {
+        return new RedisRateLimiter(1, 1, 1);
+    }
+
+
+    // gelen istek içeriisnde user ile başlık göndermiyorsa anonymous olarak keyresolser atanacak
+    @Bean
+    KeyResolver useKeyResolver() {
+        return exchange -> Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst("user"))
+                .defaultIfEmpty("anonymous");
     }
 
 }
