@@ -46,8 +46,9 @@ public class GatewayServerApplication {
                         .filters(f -> f.rewritePath("/bankapp/cards/(?<segment>.*)", "/${segment}")
                                 .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter())
                                         .setKeyResolver(useKeyResolver())))
-                                        .uri("lb://CARDS"))
-                                .build();
+                        .uri("lb://CARDS"))
+
+                .build();
     }
 
 

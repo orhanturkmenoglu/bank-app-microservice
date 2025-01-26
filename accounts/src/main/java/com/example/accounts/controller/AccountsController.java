@@ -77,7 +77,7 @@ public class AccountsController {
         return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
     }
 
-    public ResponseEntity<String> getJavaVersionInfoFallback(Throwable   throwable){
+    private ResponseEntity<String> getJavaVersionInfoFallback(Throwable   throwable){
         return ResponseEntity.status(HttpStatus.OK).body("Java 17");
     }
 
@@ -98,7 +98,7 @@ public class AccountsController {
         /*return ResponseEntity.status(HttpStatus.OK).body(buildVersion);*/
     }
 
-    public ResponseEntity<String> getBuildInfoFallback(Throwable throwable){
+    private ResponseEntity<String> getBuildInfoFallback(Throwable throwable){
         log.debug("getBuildInfoFallback() method invoked");
         return ResponseEntity.status(HttpStatus.OK)
                 .body("0.9");
@@ -131,6 +131,7 @@ public class AccountsController {
             responseCode = "200",
             description = "HTTP Status 200 OK"
     )
+
     @GetMapping("/fetch")
     public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam
                                                                @Pattern(regexp ="(^$|[0-9]{10})", message = "Mobile number should be 10 digits" )

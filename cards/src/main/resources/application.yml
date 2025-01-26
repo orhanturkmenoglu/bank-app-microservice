@@ -46,3 +46,42 @@ info:
     name: "Cards Microservice"
     description: "Project for Spring Boot Microservices Course"
     version: "1.0.0"
+
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 50
+      permittedNumberOfCallsInHalfOpenState: 3
+      failureRateThreshold: 50  #başarısız olan isteklerin yüzdesi 50 olduğunda devreye girer.
+      eventConsumerBufferSize: 10
+      waitDurationInOpenState: 10000
+      slidingWindowType: COUNT_BASED
+      minimum-number-of-calls: 3
+      slow-call-rate-threshold: 50  #yavaş  isteklerin yüzdesi 50 olduğunda devreye girer.
+      slow-call-duration-threshold: 60000   #yavaş isteklerin süresi 2000 ms olduğunda devreye girer.
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      record-exceptions: # Circuit Breaker'ın başarısız bir çağrı olarak kabul edeceği istisnalardır.
+        - java.lang.RuntimeException
+        - java.lang.IllegalStateException
+        - java.lang.IllegalArgumentException
+        - java.io.IOException
+        - java.net.SocketTimeoutException
+        - org.springframework.web.client.HttpServerErrorException
+
+
+resilience4j.retry:
+  configs:
+    default:
+      max-attempts: 3 # Maksimum tekrar denemesi
+      wait-duration: 2s # Her deneme arasındaki bekleme süresi
+      retry-exceptions:
+        - java.io.IOException # Belirli hatalar için tekrar dene
+
+logging:
+  level:
+    resilience4j.retry: DEBUG
+    resilience4j.circuitbreaker: DEBUG
+    com:
+      eureka: DEBUG

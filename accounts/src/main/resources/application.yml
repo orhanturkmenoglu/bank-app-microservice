@@ -90,6 +90,16 @@ resilience4j:
         timeout-duration: 1000
         limit-refresh-period: 5000
         limit-for-period: 1
+
+
+
+resilience4j.bulkhead:
+  instances:
+    default:
+      maxConcurrentCalls: 10 # Maksimum eş zamanlı çağrı sayısı
+      maxWaitDuration: 500ms # Eğer kaynaklar doluysa, maksimum bekleme süresi
+      event-consumer-buffer-size: 100 # Kuyruktaki maksimum çağrı sayısı
+
 logging:
   level:
     web: debug

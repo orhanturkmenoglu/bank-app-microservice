@@ -62,3 +62,4 @@ resilience4j:
         waitDurationInOpenState: 10000
         automaticTransitionFromOpenToHalfOpenEnabled: true
 
+
