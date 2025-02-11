@@ -49,6 +49,24 @@ public class AccountsController {
     @Autowired
     private AccountsContactInfoDto accountsContactInfoDto;
 
+    @Operation(
+            summary = "Create Account REST API",
+            description = "REST API to create new Customer & Account in Bank"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "HTTP Status 201 CREATED"
+    )
+    @PostMapping("/create")
+    public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto){
+
+        iAccountsService.createAccount(customerDto);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ResponseDto(AccountConstants.STATUS_201,AccountConstants.MESSAGE_201));
+    }
+
 
     @Operation(
             summary = "Contact Info REST API",
@@ -104,23 +122,7 @@ public class AccountsController {
                 .body("0.9");
     }
 
-    @Operation(
-            summary = "Create Account REST API",
-            description = "REST API to create new Customer & Account in Bank"
-    )
-    @ApiResponse(
-            responseCode = "201",
-            description = "HTTP Status 201 CREATED"
-    )
-    @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto){
 
-        iAccountsService.createAccount(customerDto);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new ResponseDto(AccountConstants.STATUS_201,AccountConstants.MESSAGE_201));
-    }
 
 
     @Operation(

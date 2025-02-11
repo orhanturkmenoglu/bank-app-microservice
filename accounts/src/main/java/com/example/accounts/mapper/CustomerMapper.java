@@ -12,10 +12,12 @@ public class CustomerMapper {
             ((CustomerDto) dto).setName(customer.getName());
             ((CustomerDto) dto).setEmail(customer.getEmail());
             ((CustomerDto) dto).setMobileNumber(customer.getMobileNumber());
+            ((CustomerDto) dto).setAccountsDto(((CustomerDto) dto).getAccountsDto());
         } else if (dto instanceof CustomerDetailsDto) {
             ((CustomerDetailsDto) dto).setName(customer.getName());
             ((CustomerDetailsDto) dto).setEmail(customer.getEmail());
             ((CustomerDetailsDto) dto).setMobileNumber(customer.getMobileNumber());
+
         }
     }
 

@@ -1,100 +1,114 @@
+version: '3.8'
+
 services:
-  accountsdb:
-    container_name: accountsdb
+  # Redis Service
+  redis:
+    image: redis:latest
+    container_name: redis
     ports:
-      - 3307:3306
+      - "6379:6379"
+    networks:
+      - microservices_network
+
+  # Gateway Server Service
+  gateway-server:
+    image: orhanturkmenoglu/gateway-server:s3
+    container_name: gateway-server
+    build:
+      context: ./gateway-server
     environment:
-      MYSQL_DATABASE: accountsdb
-    extends:
-      file: common-config.yml
-      service: microservice-db-config
-
-  loansdb:
-    container_name: loansdb
-    ports:
-      - 3308:3306
-    environment:
-      MYSQL_DATABASE: loansdb
-    extends:
-      file: common-config.yml
-      service: microservice-db-config
-
-  cardsdb:
-    container_name: cardsdb
-    ports:
-      - 3309:3306
-    environment:
-      MYSQL_DATABASE: cardsdb
-    extends:
-      file: common-config.yml
-      service: microservice-db-config
-
-  configserver:
-    image: "orhanturkmenoglu/configserver:s7"
-    container_name: configserver-ms
-    ports:
-      - "8071:8071"
-    healthcheck:
-      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    extends:
-      file: common-config.yml
-      service: microservice-base-config
-
-  accounts:
-    image: "orhanturkmenoglu/accounts:s7"
-    container_name: accounts-ms
+      - SPRING_PROFILES_ACTIVE=prod
     ports:
       - "8080:8080"
-    environment:
-      SPRING_APPLICATION_NAME: "accounts"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
     depends_on:
-      accountsdb:
-        condition: service_healthy
-      configserver:
-        condition: service_healthy
-    extends:
-      file: common-config.yml
-      service: microservice-configserver-config
+      - redis
+      - loans
+      - cards
+      - accounts
+    networks:
+      - microservices_network
 
+  # Loans Service
   loans:
-    image: "orhanturkmenoglu/loans:s7"
-    container_name: loans-ms
-    ports:
-      - "8082:8082"
+    image: orhanturkmenoglu/loans:s3
+    container_name: loans
+    build:
+      context: ./loans
     environment:
-      SPRING_APPLICATION_NAME: "loans"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/loansdb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
+    ports:
+      - "8081:8080"
     depends_on:
-      loansdb:
-        condition: service_healthy
-      configserver:
-        condition: service_healthy
-    extends:
-      file: common-config.yml
-      service: microservice-configserver-config
+      - mysql
+    networks:
+      - microservices_network
 
+  # Cards Service
   cards:
-    image: "orhanturkmenoglu/cards:s7"
-    container_name: cards-ms
-    ports:
-      - "8081:8081"
+    image: orhanturkmenoglu/cards:s3
+    container_name: cards
+    build:
+      context: ./cards
     environment:
-      SPRING_APPLICATION_NAME: "cards"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/cardsdb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
+    ports:
+      - "8082:8080"
     depends_on:
-      cardsdb:
-        condition: service_healthy
-      configserver:
-        condition: service_healthy
-    extends:
-      file: common-config.yml
-      service: microservice-configserver-config
+      - mysql
+    networks:
+      - microservices_network
+
+  # Accounts Service
+  accounts:
+    image: orhanturkmenoglu/accounts:s3
+    container_name: accounts
+    build:
+      context: ./accounts
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/accountsdb
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=rootpassword
+    ports:
+      - "8083:8080"
+    depends_on:
+      - mysql
+    networks:
+      - microservices_network
+
+  # MySQL Database for Loans, Cards, and Accounts Services
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=loansdb
+      - MYSQL_DATABASE=cardsdb
+      - MYSQL_DATABASE=accountsdb
+    ports:
+      - "3306:3306"
+    networks:
+      - microservices_network
+
+  # Config Server (Optional, if you have centralized configuration)
+  config-server:
+    image: orhanturkmenoglu/config-server:s3
+    container_name: config-server
+    build:
+      context: ./config-server
+    ports:
+      - "8888:8888"
+    depends_on:
+      - redis
+    networks:
+      - microservices_network
 
 networks:
-  eazybank:
-    driver: "bridge"
+  microservices_network:
+    driver: bridge

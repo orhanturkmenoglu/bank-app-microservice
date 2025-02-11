@@ -27,7 +27,7 @@ spring:
       host: localhost
       port: 6379
       timeout: 1s
-      connect-timeout: 2s
+      connect-timeout: 10s
 
 management:
   endpoints:

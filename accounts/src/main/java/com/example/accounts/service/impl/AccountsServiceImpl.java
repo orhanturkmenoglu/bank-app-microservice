@@ -9,6 +9,7 @@ import com.example.accounts.exception.CustomerAlreadyExistException;
 import com.example.accounts.exception.ResourceNotFoundException;
 import com.example.accounts.mapper.AccountsMapper;
 import com.example.accounts.mapper.CustomerMapper;
+import com.example.accounts.producer.AccountMessageProducer;
 import com.example.accounts.repository.AccountsRepository;
 import com.example.accounts.repository.CustomerRepository;
 import com.example.accounts.service.IAccountsService;
@@ -23,9 +24,12 @@ public class AccountsServiceImpl implements IAccountsService {
     private final AccountsRepository accountsRepository;
     private final CustomerRepository customerRepository;
 
-    public AccountsServiceImpl(AccountsRepository accountsRepository, CustomerRepository customerRepository) {
+    private final AccountMessageProducer accountMessageProducer;
+
+    public AccountsServiceImpl(AccountsRepository accountsRepository, CustomerRepository customerRepository, AccountMessageProducer accountMessageProducer) {
         this.accountsRepository = accountsRepository;
         this.customerRepository = customerRepository;
+        this.accountMessageProducer = accountMessageProducer;
     }
 
     @Override
@@ -34,17 +38,23 @@ public class AccountsServiceImpl implements IAccountsService {
         Customer customer = CustomerMapper.mapToCustomer(customerDto);
         Optional<Customer> optionalCustomer = customerRepository.findByMobileNumber(customerDto.getMobileNumber());
 
-        if(optionalCustomer.isPresent()){
+        if (optionalCustomer.isPresent()) {
             throw new CustomerAlreadyExistException("Customer already registered with given mobile number"
-                    +customerDto.getMobileNumber());
+                    + customerDto.getMobileNumber());
         }
 
+        // müşteri oluştuğunda kullanıcıya hesap bilgilerini  email ile eşzamanlı bildirim gönder.
+
         Customer savedCustomer = customerRepository.save(customer);
-        accountsRepository.save(createNewAccount(savedCustomer));
+        Accounts savedAccounts = accountsRepository.save(createNewAccount(savedCustomer));
+
+        CustomerDto savedCustomerDto = CustomerMapper.mapToCustomerDto(savedCustomer);
+        savedCustomerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(savedAccounts));
+
+        accountMessageProducer.sendMessage(savedCustomerDto);
+
 
     }
-
-
 
 
     private Accounts createNewAccount(Customer customer) {
@@ -62,10 +72,10 @@ public class AccountsServiceImpl implements IAccountsService {
     public CustomerDto fetchAccount(String mobileNumber) {
 
         Customer customer = customerRepository.findByMobileNumber(mobileNumber)
-                .orElseThrow(()->new ResourceNotFoundException("Customer","Mobile Number",mobileNumber));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "Mobile Number", mobileNumber));
 
         Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId())
-                .orElseThrow(()->
+                .orElseThrow(() ->
                         new ResourceNotFoundException("Account", "Customer Id",
                                 customer.getCustomerId().toString()));
 
@@ -93,7 +103,7 @@ public class AccountsServiceImpl implements IAccountsService {
 
             CustomerMapper.mapToCustomer(customerDto);
             customerRepository.save(customer);
-            isUpdated=true;
+            isUpdated = true;
         }
         return isUpdated;
     }

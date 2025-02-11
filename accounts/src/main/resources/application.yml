@@ -103,3 +103,7 @@ resilience4j.bulkhead:
 logging:
   level:
     web: debug
+
+
+kafka:
+  topic: "customer-create"
